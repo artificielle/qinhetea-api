@@ -1,16 +1,14 @@
 package com.qinhetea.api.controller
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.qinhetea.api.entity.Item
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -23,38 +21,40 @@ class ItemControllerTest {
   private lateinit var mvc: MockMvc
 
   @Test
+  @WithMockUser
   fun findAll() {
     mvc.perform(get("/items")).
       andExpect(status().isOk).
       andExpect(content().json("""
         {
           "_embedded": {
-            "items": [
-              {
-                "name": "jacky mao",
-                "content": "",
-                "_links": {
-                  "self": {
-                    "href": "http://localhost/items/1"
-                  },
-                  "item": {
-                    "href": "http://localhost/items/1"
-                  }
-                }
-              },
-              {
-                "name": "eternalenvy",
-                "content": "",
-                "_links": {
-                  "self": {
-                    "href": "http://localhost/items/2"
-                  },
-                  "item": {
-                    "href": "http://localhost/items/2"
-                  }
+            "items": [{
+              "name": "item a",
+              "_links": {
+                "self": {
+                  "href": "http://localhost/items/1"
+                },
+                "item": {
+                  "href": "http://localhost/items/1"
+                },
+                "tags": {
+                  "href": "http://localhost/items/1/tags"
                 }
               }
-            ]
+            }, {
+              "name": "item b",
+              "_links": {
+                "self": {
+                  "href": "http://localhost/items/2"
+                },
+                "item": {
+                  "href": "http://localhost/items/2"
+                },
+                "tags": {
+                  "href": "http://localhost/items/2/tags"
+                }
+              }
+            }]
           },
           "_links": {
             "self": {
@@ -79,19 +79,22 @@ class ItemControllerTest {
   }
 
   @Test
+  @WithMockUser
   fun findById() {
     mvc.perform(get("/items/1")).
       andExpect(status().isOk).
       andExpect(content().json("""
         {
-          "name": "jacky mao",
-          "content": "",
+          "name": "item a",
           "_links": {
             "self": {
               "href": "http://localhost/items/1"
             },
             "item": {
               "href": "http://localhost/items/1"
+            },
+            "tags": {
+              "href": "http://localhost/items/1/tags"
             }
           }
         }
@@ -99,43 +102,36 @@ class ItemControllerTest {
   }
 
   @Test
+  @WithMockUser
   fun findByName() {
-    mvc.perform(get("/items/search/findByName?name=jacky mao")).
+    mvc.perform(get("/items/search/findByName?name=item a")).
       andExpect(status().isOk).
       andExpect(content().json("""
         {
-          "_embedded": {
-            "items": [
-              {
-                "name": "jacky mao",
-                "content": "",
-                "_links": {
-                  "self": {
-                    "href": "http://localhost/items/1"
-                  },
-                  "item": {
-                    "href": "http://localhost/items/1"
-                  }
-                }
-              }
-            ]
-          },
+          "name": "item a",
           "_links": {
             "self": {
-              "href": "http://localhost/items/search/findByName?name=jacky%20mao"
+              "href": "http://localhost/items/1"
+            },
+            "item": {
+              "href": "http://localhost/items/1"
+            },
+            "tags": {
+              "href": "http://localhost/items/1/tags"
             }
           }
         }
       """))
   }
 
-  @Test
-  fun save() {
-    val content = jacksonObjectMapper().writeValueAsString(
-      Item(name = "xxx")
-    )
-    mvc.perform(post("/items").content(content)).
-      andExpect(status().isCreated)
-  }
+  // @Test
+  // @WithMockUser
+  // fun save() {
+  //   val content = jacksonObjectMapper().writeValueAsString(
+  //     Item(name = "xxx")
+  //   )
+  //   mvc.perform(post("/items").content(content)).
+  //     andExpect(status().isCreated)
+  // }
 
 }

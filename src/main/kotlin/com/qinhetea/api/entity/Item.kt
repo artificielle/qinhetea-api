@@ -1,14 +1,12 @@
 package com.qinhetea.api.entity
 
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
 data class Item(
   val name: String = "",
-  val content: String = "",
-  @Id @GeneratedValue(strategy = GenerationType.AUTO)
+  @OneToMany(mappedBy = "item", fetch = FetchType.EAGER)
+  val tags: MutableList<ItemTag> = mutableListOf(),
+  @Id @GeneratedValue
   val id: Long = 0
 )
