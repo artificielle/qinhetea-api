@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Bean
 class Application {
 
   @Bean
-  fun init(repository: ItemRepository) = CommandLineRunner {
+  fun initialize(repository: ItemRepository) = CommandLineRunner {
     repository.save(Item("jacky mao"))
     repository.save(Item("eternalenvy"))
     logger.info { "repository.count() = ${repository.count()}" }

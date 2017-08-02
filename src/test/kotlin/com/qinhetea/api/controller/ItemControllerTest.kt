@@ -1,14 +1,16 @@
 package com.qinhetea.api.controller
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.qinhetea.api.entity.Item
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.MediaType
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -22,22 +24,118 @@ class ItemControllerTest {
 
   @Test
   fun findAll() {
-    mvc.perform(get("/api/items/").accept(MediaType.APPLICATION_JSON)).
+    mvc.perform(get("/items")).
       andExpect(status().isOk).
       andExpect(content().json("""
-        [
-          {
-            "name": "jacky mao",
-            "content": "",
-            "id": 1
+        {
+          "_embedded": {
+            "items": [
+              {
+                "name": "jacky mao",
+                "content": "",
+                "_links": {
+                  "self": {
+                    "href": "http://localhost/items/1"
+                  },
+                  "item": {
+                    "href": "http://localhost/items/1"
+                  }
+                }
+              },
+              {
+                "name": "eternalenvy",
+                "content": "",
+                "_links": {
+                  "self": {
+                    "href": "http://localhost/items/2"
+                  },
+                  "item": {
+                    "href": "http://localhost/items/2"
+                  }
+                }
+              }
+            ]
           },
-          {
-            "name": "eternalenvy",
-            "content": "",
-            "id": 2
+          "_links": {
+            "self": {
+              "href": "http://localhost/items{?page,size,sort}",
+              "templated": true
+            },
+            "profile": {
+              "href": "http://localhost/profile/items"
+            },
+            "search": {
+              "href": "http://localhost/items/search"
+            }
+          },
+          "page": {
+            "size": 20,
+            "totalElements": 2,
+            "totalPages": 1,
+            "number": 0
           }
-        ]
+        }
       """))
+  }
+
+  @Test
+  fun findById() {
+    mvc.perform(get("/items/1")).
+      andExpect(status().isOk).
+      andExpect(content().json("""
+        {
+          "name": "jacky mao",
+          "content": "",
+          "_links": {
+            "self": {
+              "href": "http://localhost/items/1"
+            },
+            "item": {
+              "href": "http://localhost/items/1"
+            }
+          }
+        }
+      """))
+  }
+
+  @Test
+  fun findByName() {
+    mvc.perform(get("/items/search/findByName?name=jacky mao")).
+      andExpect(status().isOk).
+      andExpect(content().json("""
+        {
+          "_embedded": {
+            "items": [
+              {
+                "name": "jacky mao",
+                "content": "",
+                "_links": {
+                  "self": {
+                    "href": "http://localhost/items/1"
+                  },
+                  "item": {
+                    "href": "http://localhost/items/1"
+                  }
+                }
+              }
+            ]
+          },
+          "_links": {
+            "self": {
+              "href": "http://localhost/items/search/findByName?name=jacky%20mao"
+            }
+          }
+        }
+      """))
+  }
+
+  @Test
+  fun save() {
+    val content = jacksonObjectMapper().writeValueAsString(
+      Item(name = "xxx")
+    )
+    mvc.perform(post("/items").content(content)).
+      andExpect(status().isCreated)
   }
 
 }

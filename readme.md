@@ -21,6 +21,7 @@ java -jar build/libs/*.jar
 ### spring boot
 
 - <https://spring.io/guides/gs/spring-boot/>
+- <https://spring.io/guides/gs/accessing-data-rest/>
 - <https://github.com/spring-guides/gs-spring-boot>
 - <https://github.com/sdeleuze/spring-boot-kotlin-demo>
 - <https://docs.spring.io/spring-boot/docs/2.0.x/reference/html/>
