@@ -1,2 +1,8 @@
 server:
-  port: 23333
+  port: 9000
+
+management:
+  port: 9010
+
+logging:
+  level: DEBUG
