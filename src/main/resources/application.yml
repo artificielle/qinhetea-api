@@ -6,3 +6,8 @@ management:
 
 logging:
   level: DEBUG
+
+spring:
+  data:
+    rest:
+      base-path: /api

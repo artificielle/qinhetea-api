@@ -16,9 +16,9 @@ import org.springframework.context.annotation.Bean
 class Application {
 
   // @Bean
-  // fun corsFilter(
+  // fun rCorsFilter(
   //   @Value("\${tagit.origin:http://localhost:23333}") origin: String
-  // ) = CorsFilter {
+  // ) = FilterRegistrationBean(CorsFilter {
   //   CorsConfiguration().
   //     also { it.allowedOrigins = listOf("*", origin) }.
   //     also { it.allowedMethods = HttpMethod.values().map { it.name } }.
@@ -30,11 +30,11 @@ class Application {
   //         "Access-Control-Request-Method", "Access-Control-Request-Headers"
   //       )
   //     }
-  // }
+  // })
 
   // @Bean
-  // fun corsFilter(
-  //   @Value("\${tagit.origin:http://localhost:23333}") origin: String
+  // fun cCorsFilter(
+  //   @Value("\${tagit.origin:http://localhost:9000}") origin: String
   // ): FilterRegistrationBean<Filter> = FilterRegistrationBean(object : Filter {
   //
   //   override fun doFilter(
@@ -51,13 +51,10 @@ class Application {
   //     chain: FilterChain
   //   ) {
   //     response.setHeader("Access-Control-Allow-Origin", origin)
-  //     response.setHeader("Access-Control-Allow-Methods",
-  //       "POST, GET, OPTIONS, DELETE")
+  //     response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE")
   //     response.setHeader("Access-Control-Max-Age", (60 * 60).toString())
   //     response.setHeader("Access-Control-Allow-Credentials", "true")
-  //     response.setHeader(
-  //       "Access-Control-Allow-Headers",
-  //       "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Authorization")
+  //     response.setHeader("Access-Control-Allow-Headers", "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Authorization")
   //
   //     when (request.method) {
   //       "OPTIONS" -> response.status = HttpStatus.OK.value()
@@ -70,20 +67,6 @@ class Application {
   //   override fun destroy() {}
   //
   // })
-
-  @Bean
-  fun initializeUserRepository(
-    userRepository: UserRepository
-  ) = CommandLineRunner {
-    if (userRepository.count() == 0L) {
-      userRepository.saveAll(listOf(
-        User(username = "aqua", password = "pass", role = "ADMIN"),
-        User(username = "user", password = "pass", role = "USER"),
-        User(username = "actuator", password = "pass", role = "ACTUATOR")
-      ).map { it.encodePassword() })
-    }
-    logger.info { "userRepository.count() = ${userRepository.count()}" }
-  }
 
   @Bean
   fun initializeItemRepository(
@@ -101,6 +84,20 @@ class Application {
       item.copy(tags = item.tags.map { it.copy(item = Item()) }.toMutableList())
     }
     logger.info { "itemAX = $itemAX" }
+  }
+
+  @Bean
+  fun initializeUserRepository(
+    userRepository: UserRepository
+  ) = CommandLineRunner {
+    if (userRepository.count() == 0L) {
+      userRepository.saveAll(listOf(
+        User(username = "aqua", password = "pass", roles = arrayOf("ADMIN")),
+        User(username = "user", password = "pass", roles = arrayOf("USER")),
+        User(username = "actuator", password = "pass", roles = arrayOf("ACTUATOR"))
+      ).map { it.encodePassword() })
+    }
+    logger.info { "userRepository.count() = ${userRepository.count()}" }
   }
 
 }

@@ -26,7 +26,7 @@ class ItemControllerTest {
   @Test
   @WithMockUser
   fun findAll() {
-    mvc.perform(get("/items")).
+    mvc.perform(get("/api/items")).
       andExpect(status().isOk).
       andExpect(content().json("""
         {
@@ -35,40 +35,40 @@ class ItemControllerTest {
               "name": "item a",
               "_links": {
                 "self": {
-                  "href": "http://localhost/items/1"
+                  "href": "http://localhost/api/items/1"
                 },
                 "item": {
-                  "href": "http://localhost/items/1"
+                  "href": "http://localhost/api/items/1"
                 },
                 "tags": {
-                  "href": "http://localhost/items/1/tags"
+                  "href": "http://localhost/api/items/1/tags"
                 }
               }
             }, {
               "name": "item b",
               "_links": {
                 "self": {
-                  "href": "http://localhost/items/2"
+                  "href": "http://localhost/api/items/2"
                 },
                 "item": {
-                  "href": "http://localhost/items/2"
+                  "href": "http://localhost/api/items/2"
                 },
                 "tags": {
-                  "href": "http://localhost/items/2/tags"
+                  "href": "http://localhost/api/items/2/tags"
                 }
               }
             }]
           },
           "_links": {
             "self": {
-              "href": "http://localhost/items{?page,size,sort}",
+              "href": "http://localhost/api/items{?page,size,sort}",
               "templated": true
             },
             "profile": {
-              "href": "http://localhost/profile/items"
+              "href": "http://localhost/api/profile/items"
             },
             "search": {
-              "href": "http://localhost/items/search"
+              "href": "http://localhost/api/items/search"
             }
           },
           "page": {
@@ -84,20 +84,20 @@ class ItemControllerTest {
   @Test
   @WithMockUser
   fun findById() {
-    mvc.perform(get("/items/1")).
+    mvc.perform(get("/api/items/1")).
       andExpect(status().isOk).
       andExpect(content().json("""
         {
           "name": "item a",
           "_links": {
             "self": {
-              "href": "http://localhost/items/1"
+              "href": "http://localhost/api/items/1"
             },
             "item": {
-              "href": "http://localhost/items/1"
+              "href": "http://localhost/api/items/1"
             },
             "tags": {
-              "href": "http://localhost/items/1/tags"
+              "href": "http://localhost/api/items/1/tags"
             }
           }
         }
@@ -107,20 +107,20 @@ class ItemControllerTest {
   @Test
   @WithMockUser
   fun findByName() {
-    mvc.perform(get("/items/search/findByName?name=item a")).
+    mvc.perform(get("/api/items/search/findByName?name=item a")).
       andExpect(status().isOk).
       andExpect(content().json("""
         {
           "name": "item a",
           "_links": {
             "self": {
-              "href": "http://localhost/items/1"
+              "href": "http://localhost/api/items/1"
             },
             "item": {
-              "href": "http://localhost/items/1"
+              "href": "http://localhost/api/items/1"
             },
             "tags": {
-              "href": "http://localhost/items/1/tags"
+              "href": "http://localhost/api/items/1/tags"
             }
           }
         }
@@ -133,7 +133,7 @@ class ItemControllerTest {
     val content = jacksonObjectMapper().writeValueAsString(
       Item(name = "xxx")
     )
-    mvc.perform(post("/items").content(content)).
+    mvc.perform(post("/api/items").content(content)).
       andExpect(status().isCreated).
       andExpect(header().string("Location", containsString("/items/")))
   }

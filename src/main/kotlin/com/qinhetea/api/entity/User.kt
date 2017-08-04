@@ -1,7 +1,7 @@
 package com.qinhetea.api.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import org.springframework.security.core.authority.AuthorityUtils
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -13,7 +13,7 @@ data class User(
   val username: String = "",
   @JsonIgnore
   val password: String = "",
-  val role: String = "USER",
+  val roles: Array<String> = arrayOf("USER"),
   @Id @GeneratedValue
   val id: Long = 0
 ) {
@@ -21,12 +21,19 @@ data class User(
   fun toUserDetails() = UserDetailsUser(
     username, password,
     true, true, true, true,
-    AuthorityUtils.createAuthorityList("ROLE_$role")
+    roles.map { SimpleGrantedAuthority("ROLE_$it") }
   )
 
   fun encodePassword() = copy(password = encoder.encode(password))
 
   fun erasePassword() = copy(password = "")
+
+  override fun equals(other: Any?): Boolean = when (other) {
+    is User -> id == other.id
+    else -> false
+  }
+
+  override fun hashCode() = id.toInt()
 
   companion object {
 
