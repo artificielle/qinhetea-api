@@ -15,59 +15,6 @@ import org.springframework.context.annotation.Bean
 @SpringBootApplication
 class Application {
 
-  // @Bean
-  // fun rCorsFilter(
-  //   @Value("\${tagit.origin:http://localhost:23333}") origin: String
-  // ) = FilterRegistrationBean(CorsFilter {
-  //   CorsConfiguration().
-  //     also { it.allowedOrigins = listOf("*", origin) }.
-  //     also { it.allowedMethods = HttpMethod.values().map { it.name } }.
-  //     also { it.allowCredentials = true }.
-  //     also { it.maxAge = 3600 }.
-  //     also {
-  //       it.allowedHeaders = listOf(
-  //         "Origin", "Accept", "X-Requested-With", "Content-Type", "Authorization",
-  //         "Access-Control-Request-Method", "Access-Control-Request-Headers"
-  //       )
-  //     }
-  // })
-
-  // @Bean
-  // fun cCorsFilter(
-  //   @Value("\${tagit.origin:http://localhost:9000}") origin: String
-  // ): FilterRegistrationBean<Filter> = FilterRegistrationBean(object : Filter {
-  //
-  //   override fun doFilter(
-  //     request: ServletRequest,
-  //     response: ServletResponse,
-  //     chain: FilterChain
-  //   ) {
-  //     doFilter(request as HttpServletRequest, response as HttpServletResponse, chain)
-  //   }
-  //
-  //   fun doFilter(
-  //     request: HttpServletRequest,
-  //     response: HttpServletResponse,
-  //     chain: FilterChain
-  //   ) {
-  //     response.setHeader("Access-Control-Allow-Origin", origin)
-  //     response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE")
-  //     response.setHeader("Access-Control-Max-Age", (60 * 60).toString())
-  //     response.setHeader("Access-Control-Allow-Credentials", "true")
-  //     response.setHeader("Access-Control-Allow-Headers", "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Authorization")
-  //
-  //     when (request.method) {
-  //       "OPTIONS" -> response.status = HttpStatus.OK.value()
-  //       else -> chain.doFilter(request, response)
-  //     }
-  //   }
-  //
-  //   override fun init(filterConfig: FilterConfig) {}
-  //
-  //   override fun destroy() {}
-  //
-  // })
-
   @Bean
   fun initializeItemRepository(
     itemRepository: ItemRepository,
