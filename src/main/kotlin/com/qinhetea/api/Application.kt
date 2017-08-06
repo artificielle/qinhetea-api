@@ -25,12 +25,12 @@ class Application {
     itemTagRepository.save(ItemTag(content = "tag a a", item = itemA))
     itemTagRepository.save(ItemTag(content = "tag a b", item = itemA))
     itemTagRepository.save(ItemTag(content = "tag b a", item = itemB))
-    logger.info { "itemRepository.count() = ${itemRepository.count()}" }
-    logger.info { "itemTagRepository.count() = ${itemTagRepository.count()}" }
+    logger.debug { "itemRepository.count() = ${itemRepository.count()}" }
+    logger.debug { "itemTagRepository.count() = ${itemTagRepository.count()}" }
     val itemAX = itemRepository.findById(itemA.id).get().let { item ->
       item.copy(tags = item.tags.map { it.copy(item = Item()) }.toMutableList())
     }
-    logger.info { "itemAX = $itemAX" }
+    logger.debug { "itemAX = $itemAX" }
   }
 
   @Bean
@@ -44,7 +44,7 @@ class Application {
         User(username = "actuator", password = "pass", roles = arrayOf("ACTUATOR"))
       ).map { it.encodePassword() })
     }
-    logger.info { "userRepository.count() = ${userRepository.count()}" }
+    logger.debug { "userRepository.count() = ${userRepository.count()}" }
   }
 
 }
