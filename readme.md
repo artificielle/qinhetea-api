@@ -1,5 +1,7 @@
 # qinhetea-api
 
+[![Build Status][build-badge]][build-status]
+
 ## usage
 
 ```bash
@@ -40,3 +42,6 @@ java -jar build/libs/*.jar
 - <https://kotlinlang.org/docs/reference/null-safety.html>
 - <https://kotlinlang.org/docs/reference/using-gradle.html>
 - <https://kotlinlang.org/api/latest/jvm/stdlib/index.html>
+
+[build-badge]: https://img.shields.io/travis/airt/qinhetea-api.svg
+[build-status]: https://travis-ci.org/airt/qinhetea-api
