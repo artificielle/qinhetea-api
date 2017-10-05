@@ -8,7 +8,5 @@ spring:
   data:
     rest:
       base-path: /api
-
-logging:
-  level:
-    com.qinhetea.api: DEBUG
+  profiles:
+    active:

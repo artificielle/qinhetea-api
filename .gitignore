@@ -7,3 +7,5 @@ build
 *.iws
 *.log
 !gradle/wrapper/gradle-wrapper.jar
+
+application-*.yml

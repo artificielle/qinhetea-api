@@ -21,10 +21,11 @@ class SecurityConfiguration : WebSecurityConfigurerAdapter() {
   override fun configure(http: HttpSecurity) {
     http.
       authorizeRequests().
-      antMatchers("/api/users/**").hasRole("ADMIN").
-      antMatchers("/api/**").authenticated().
+      antMatchers("/api/*").permitAll().
+      antMatchers("/api/**", "/api/users").authenticated().
       anyRequest().permitAll().and().
       formLogin().and().
+      logout().and().
       csrf().disable().
       httpBasic()
   }

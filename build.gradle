@@ -5,9 +5,9 @@ buildscript {
   }
   repositories {
     mavenCentral()
-    maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
     maven { url 'https://repo.spring.io/snapshot' }
     maven { url 'https://repo.spring.io/milestone' }
+    maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
   }
   dependencies {
     classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
@@ -34,9 +34,9 @@ targetCompatibility = 1.8
 
 repositories {
   mavenCentral()
-  maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
   maven { url 'https://repo.spring.io/snapshot' }
   maven { url 'https://repo.spring.io/milestone' }
+  maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
 }
 
 dependencies {
@@ -53,7 +53,7 @@ dependencies {
   compile 'com.github.binarywang:weixin-java-mp:2.7.8'
   compile 'io.github.microutils:kotlin-logging:1.4.6'
   compile 'com.h2database:h2'
-  compileOnly 'org.projectlombok:lombok'
+  compile 'org.postgresql:postgresql:9.2-1004-jdbc4'
   testCompile 'org.springframework.boot:spring-boot-starter-test'
   testCompile 'org.springframework.security:spring-security-test'
 }

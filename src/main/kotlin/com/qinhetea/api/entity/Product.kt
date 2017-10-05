@@ -1,15 +1,18 @@
 package com.qinhetea.api.entity
 
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
-import javax.persistence.ManyToOne
+import javax.persistence.*
 
 @Entity
 data class Product(
-  val name: String = "",
-  @ManyToOne
-  val category: Category = Category(),
+  val name: String? = null,
+  val subtitle: String? = null,
+  val img: String? = null,
+  @OneToOne(cascade = arrayOf(CascadeType.ALL))
+  val detail: ProductDetail? = null,
+  @ManyToOne(cascade = arrayOf(CascadeType.ALL))
+  val category: Category? = null,
+  @ManyToOne(cascade = arrayOf(CascadeType.ALL))
+  val shop: Shop? = null,
   @Id @GeneratedValue
-  val id: Long = 0
+  val id: Long? = null
 )
