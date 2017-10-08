@@ -6,16 +6,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
+import javax.persistence.Table
 import org.springframework.security.core.userdetails.User as UserDetailsUser
 
 @Entity
+@Table(name = "sys_user")
 data class User(
-  val username: String = "",
+  val username: String? = null,
   @JsonIgnore
-  val password: String = "",
+  val password: String? = null,
   val roles: Array<String> = arrayOf("USER"),
   @Id @GeneratedValue
-  val id: Long = 0
+  val id: Long? = null
 ) {
 
   fun toUserDetails() = UserDetailsUser(
@@ -33,13 +35,10 @@ data class User(
     else -> false
   }
 
-  override fun hashCode() = id.toInt()
+  override fun hashCode() = if (id === null) 0 else id.toInt()
 
   companion object {
-
     val encoder = BCryptPasswordEncoder()
-
   }
-
 }
 
