@@ -8,5 +8,10 @@ spring:
   data:
     rest:
       base-path: /api
-  profiles:
-    active:
+  jackson:
+    serialization:
+      indent_output: true
+
+logging:
+  level:
+    com.qinhetea.api: DEBUG

@@ -5,6 +5,7 @@ import com.qinhetea.api.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -21,11 +22,11 @@ class SecurityConfiguration : WebSecurityConfigurerAdapter() {
   override fun configure(http: HttpSecurity) {
     http.
       authorizeRequests().
-      antMatchers("/api/*").permitAll().
-      antMatchers("/api/**", "/api/users").authenticated().
+      mvcMatchers("/api/users/**").hasRole(User.Role.ADMIN).
+      mvcMatchers(HttpMethod.GET, "/api/**").permitAll().
+      mvcMatchers("/api/**").authenticated().
       anyRequest().permitAll().and().
       formLogin().and().
-      logout().and().
       csrf().disable().
       httpBasic()
   }

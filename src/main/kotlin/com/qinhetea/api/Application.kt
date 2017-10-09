@@ -1,16 +1,14 @@
 package com.qinhetea.api
 
-import com.qinhetea.api.entity.*
-import com.qinhetea.api.repository.*
+import com.qinhetea.api.entity.User
+import com.qinhetea.api.repository.UserRepository
+import mu.KotlinLogging
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.SpringApplication
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Bean
-import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration
 
 @SpringBootApplication
-@EnableAutoConfiguration(exclude = arrayOf(RepositoryRestMvcAutoConfiguration::class))
 class Application {
 
   @Bean
@@ -19,13 +17,17 @@ class Application {
   ) = CommandLineRunner {
     if (userRepository.count() == 0L) {
       userRepository.saveAll(listOf(
-        User(username = "admin", password = "123", roles = arrayOf("ADMIN"), id = null),
-        User(username = "user", password = "123", roles = arrayOf("USER"), id = null),
-        User(username = "actuator", password = "123", roles = arrayOf("ACTUATOR"), id = null)
+        User(username = "admin", password = "pass", roles = arrayOf(User.Role.ADMIN)),
+        User(username = "user", password = "pass", roles = arrayOf(User.Role.USER)),
+        User(username = "actuator", password = "pass", roles = arrayOf(User.Role.ACTUATOR))
       ).map { it.encodePassword() })
     }
+    logger.debug { "number of users = ${userRepository.count()}" }
   }
+
 }
+
+private val logger = KotlinLogging.logger {}
 
 fun main(args: Array<String>) {
   SpringApplication.run(Application::class.java, *args)
