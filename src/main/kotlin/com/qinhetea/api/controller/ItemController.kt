@@ -1,5 +1,6 @@
 package com.qinhetea.api.controller
 
+import com.qinhetea.api.entity.User
 import com.qinhetea.api.repository.ItemRepository
 import org.springframework.security.access.annotation.Secured
 import org.springframework.web.bind.annotation.GetMapping
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 class ItemController(val repository: ItemRepository) {
 
   @GetMapping("/repository-count")
-  @Secured("ROLE_ADMIN")
+  @Secured("ROLE_${User.Role.ADMIN}")
   fun count() = repository.count()
 
   // @GetMapping("/")

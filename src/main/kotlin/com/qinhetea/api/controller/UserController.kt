@@ -11,19 +11,21 @@ import javax.annotation.security.RolesAllowed
 @RequestMapping("/api/users")
 class UserController(val repository: UserRepository) {
 
-  @GetMapping("")
-  @RolesAllowed("ADMIN")
-  fun findAll(pageable: Pageable): Page<User> = repository.findAll(pageable)
+  @GetMapping("/")
+  @RolesAllowed(User.Role.ADMIN)
+  fun findAll(pagination: Pageable): Page<User> =
+    repository.findAll(pagination)
 
   @PostMapping("/save")
-  @RolesAllowed("ADMIN")
-  fun save(user: User): User = repository.save(user)
+  @RolesAllowed(User.Role.ADMIN)
+  fun save(user: User): User =
+    repository.save(user)
 
-  @PostMapping("/del/{id}")
-  @RolesAllowed("ADMIN")
-  fun del(@PathVariable id: Long): Boolean {
-    repository.delete(User(id = id))
-    val user: User? = repository.findById(id).orElse(null)
-    return user === null
+  @PostMapping("/delete/{id}")
+  @RolesAllowed(User.Role.ADMIN)
+  fun delete(@PathVariable id: Long): Boolean {
+    repository.deleteById(id)
+    return !repository.findById(id).isPresent
   }
+
 }

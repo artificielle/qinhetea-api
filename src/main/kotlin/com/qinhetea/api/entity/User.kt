@@ -9,13 +9,16 @@ import javax.persistence.Id
 import javax.persistence.Table
 import org.springframework.security.core.userdetails.User as UserDetailsUser
 
+typealias UserRole = String
+
 @Entity
 @Table(name = "sys_user")
 data class User(
   val username: String? = null,
+  val nickname: String? = null,
   @JsonIgnore
   val password: String? = null,
-  val roles: Array<String> = arrayOf("USER"),
+  val roles: Array<UserRole> = arrayOf(Role.USER),
   @Id @GeneratedValue
   val id: Long? = null
 ) {
@@ -28,17 +31,24 @@ data class User(
 
   fun encodePassword() = copy(password = encoder.encode(password))
 
-  fun erasePassword() = copy(password = "")
+  fun erasePassword() = copy(password = null)
 
   override fun equals(other: Any?): Boolean = when (other) {
     is User -> id == other.id
     else -> false
   }
 
-  override fun hashCode() = if (id === null) 0 else id.toInt()
+  override fun hashCode() = id?.toInt() ?: 0
+
+  object Role {
+    const val USER = "USER"
+    const val ADMIN = "ADMIN"
+    const val ACTUATOR = "ACTUATOR"
+  }
 
   companion object {
     val encoder = BCryptPasswordEncoder()
   }
+
 }
 

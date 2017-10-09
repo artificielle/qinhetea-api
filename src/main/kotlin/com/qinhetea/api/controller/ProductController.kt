@@ -2,7 +2,7 @@ package com.qinhetea.api.controller
 
 import com.qinhetea.api.entity.Product
 import com.qinhetea.api.entity.ProductDetail
-import com.qinhetea.api.repository.ProductDetailRepository
+import com.qinhetea.api.entity.User
 import com.qinhetea.api.repository.ProductRepository
 import org.springframework.data.domain.Example
 import org.springframework.data.domain.ExampleMatcher
@@ -16,28 +16,32 @@ import javax.annotation.security.RolesAllowed
 @RequestMapping("/api/products")
 class ProductController(val repository: ProductRepository) {
 
-  @GetMapping("")
-  fun findAll(pageable: Pageable, product: Product): Page<Product> =
+  @GetMapping("/")
+  fun findAll(pagination: Pageable, product: Product): Page<Product> =
     repository.findAll(
-      Example.of(product,
-        ExampleMatcher.matching()
-          .withIgnoreCase()
-          .withIgnorePaths("img")
-          .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
-          .withIgnoreNullValues()), pageable)
+      Example.of(
+        product,
+        ExampleMatcher.matching().
+          withIgnoreCase().
+          withIgnorePaths("img").
+          withIgnoreNullValues().
+          withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+      ),
+      pagination
+    )
 
   @PostMapping("/save")
-  @RolesAllowed("ADMIN")
+  @RolesAllowed(User.Role.ADMIN)
   @Transactional
   fun save(product: Product, detail: ProductDetail): Product =
     repository.save(product.copy(detail = detail))
 
-  @PostMapping("/del/{id}")
-  @RolesAllowed("ADMIN")
+  @PostMapping("/delete/{id}")
+  @RolesAllowed(User.Role.ADMIN)
   @Transactional
-  fun del(@PathVariable id: Long): Boolean {
-    repository.delete(Product(id = id))
-    val product: Product? = repository.findById(id).orElse(null)
-    return product === null
+  fun delete(@PathVariable id: Long): Boolean {
+    repository.deleteById(id)
+    return !repository.findById(id).isPresent
   }
+
 }

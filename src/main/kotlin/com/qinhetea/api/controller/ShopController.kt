@@ -1,6 +1,7 @@
 package com.qinhetea.api.controller
 
 import com.qinhetea.api.entity.Shop
+import com.qinhetea.api.entity.User
 import com.qinhetea.api.repository.ShopRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -11,19 +12,20 @@ import javax.annotation.security.RolesAllowed
 @RequestMapping("/api/shops")
 class ShopController(val repository: ShopRepository) {
 
-  @GetMapping("")
-  fun findAll(pageable: Pageable): Page<Shop> = repository.findAll(pageable)
+  @GetMapping("/")
+  fun findAll(pagination: Pageable): Page<Shop> =
+    repository.findAll(pagination)
 
   @PostMapping("/save")
-  @RolesAllowed("ADMIN")
-  fun save(shop: Shop): Shop = repository.save(shop)
+  @RolesAllowed(User.Role.ADMIN)
+  fun save(shop: Shop): Shop =
+    repository.save(shop)
 
-  @PostMapping("/del/{id}")
-  @RolesAllowed("ADMIN")
-  fun del(@PathVariable id: Long): Boolean {
-    repository.delete(Shop(id = id))
-    val shop: Shop? = repository.findById(id).orElse(null)
-    return shop === null
+  @PostMapping("/delete/{id}")
+  @RolesAllowed(User.Role.ADMIN)
+  fun delete(@PathVariable id: Long): Boolean {
+    repository.deleteById(id)
+    return !repository.findById(id).isPresent
   }
 
 }

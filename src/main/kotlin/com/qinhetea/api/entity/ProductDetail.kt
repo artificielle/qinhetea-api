@@ -6,9 +6,7 @@ import javax.persistence.Id
 
 @Entity
 data class ProductDetail(
-  /**
-   * unit $0.01
-   */
+  /** unit: $0.01 */
   val price: Long? = null,
   val storage: Int? = null,
   val type: String? = null,
