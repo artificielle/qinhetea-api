@@ -32,6 +32,14 @@ jar {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+compileKotlin {
+  kotlinOptions.jvmTarget = '1.8'
+}
+
+compileTestKotlin {
+  kotlinOptions.jvmTarget = '1.8'
+}
+
 repositories {
   mavenCentral()
   maven { url 'https://repo.spring.io/snapshot' }
@@ -53,7 +61,7 @@ dependencies {
   compile 'com.github.binarywang:weixin-java-mp:2.7.8'
   compile 'io.github.microutils:kotlin-logging:1.4.6'
   compile 'com.h2database:h2'
-  compile 'org.postgresql:postgresql:9.2-1004-jdbc4'
+  runtime 'org.postgresql:postgresql'
   testCompile 'org.springframework.boot:spring-boot-starter-test'
   testCompile 'org.springframework.security:spring-security-test'
 }
