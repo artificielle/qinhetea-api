@@ -9,9 +9,9 @@ data class Product(
   val img: String? = null,
   @OneToOne(cascade = arrayOf(CascadeType.ALL))
   val detail: ProductDetail? = null,
-  @ManyToOne(cascade = arrayOf(CascadeType.ALL))
+  @ManyToOne
   val category: Category? = null,
-  @ManyToOne(cascade = arrayOf(CascadeType.ALL))
+  @ManyToOne
   val shop: Shop? = null,
   @Id @GeneratedValue
   val id: Long? = null

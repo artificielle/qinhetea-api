@@ -8,9 +8,9 @@ import java.security.Principal
 
 @RestController
 @RequestMapping("/api/self")
-class SelfController(val repository: UserRepository) {
+class SelfController(val userRepository: UserRepository) {
 
   @GetMapping("")
-  fun get(principal: Principal) = repository.findByUsername(principal.name)
+  fun get(principal: Principal) = userRepository.findByUsername(principal.name)
 
 }

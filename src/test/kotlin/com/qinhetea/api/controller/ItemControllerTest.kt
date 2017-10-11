@@ -10,13 +10,11 @@ import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-
 
 @RunWith(SpringRunner::class)
 @SpringBootTest
@@ -29,7 +27,7 @@ class ItemControllerTest {
   @Autowired
   private lateinit var itemRepository: ItemRepository
 
-  private lateinit var mockItems: List<Item>
+  private lateinit var items: List<Item>
 
   private val path = "/api/items"
 
@@ -37,32 +35,32 @@ class ItemControllerTest {
   fun initialize() {
     assertEquals(itemRepository.count(), 0)
 
-    mockItems = listOf(
+    items = itemRepository.saveAll(listOf(
       Item(name = "item-1"),
       Item(name = "item-2")
-    ).let { itemRepository.saveAll(it) }
+    ))
+
+    assertEquals(itemRepository.count(), items.size.toLong())
   }
 
   @After
   fun cleanup() {
-    itemRepository.deleteInBatch(mockItems)
+    itemRepository.deleteInBatch(items)
   }
 
   @Test
-  @WithMockUser
   fun findAll() {
     mvc.perform(get(path)).
       andExpect(status().isOk).
       andExpect(jsonPath("_embedded.items").isArray).
-      andExpect(jsonPath("_embedded.items[*].name").value(mockItems.map { it.name })).
+      andExpect(jsonPath("_embedded.items[*].name").value(items.map { it.name })).
       andExpect(jsonPath("page.number").value(0)).
       andExpect(jsonPath("page.size").value(20)).
-      andExpect(jsonPath("page.totalElements").value(mockItems.size)).
+      andExpect(jsonPath("page.totalElements").value(items.size)).
       andExpect(jsonPath("page.totalPages").value(1))
   }
 
   @Test
-  @WithMockUser
   fun findAllWithPagination() {
     val request = get(path).
       param("sort", "name,desc").
@@ -71,19 +69,32 @@ class ItemControllerTest {
     mvc.perform(request).
       andExpect(status().isOk).
       andExpect(jsonPath("_embedded.items").isArray).
-      andExpect(jsonPath("_embedded.items[*].name").value(mockItems.map { it.name }.reversed())).
+      andExpect(jsonPath("_embedded.items[*].name").value(items.map { it.name }.reversed())).
       andExpect(jsonPath("page.number").value(0)).
       andExpect(jsonPath("page.size").value(10)).
-      andExpect(jsonPath("page.totalElements").value(mockItems.size)).
+      andExpect(jsonPath("page.totalElements").value(items.size)).
       andExpect(jsonPath("page.totalPages").value(1))
   }
 
   @Test
-  @WithMockUser
   fun findOneById() {
-    mvc.perform(get("$path/${mockItems.first().id}")).
+    mvc.perform(get("$path/${items.first().id}")).
       andExpect(status().isOk).
-      andExpect(jsonPath("name").value(mockItems.first().name))
+      andExpect(jsonPath("name").value(items.first().name))
+  }
+
+  @Test
+  fun findAllByNameContainingIgnoreCase() {
+    val request = get("$path/search/findByNameContainingIgnoreCase").
+      param("name", "TE")
+    mvc.perform(request).
+      andExpect(status().isOk).
+      andExpect(jsonPath("_embedded.items").isArray).
+      andExpect(jsonPath("_embedded.items[*].name").value(items.map { it.name })).
+      andExpect(jsonPath("page.number").value(0)).
+      andExpect(jsonPath("page.size").value(20)).
+      andExpect(jsonPath("page.totalElements").value(items.size)).
+      andExpect(jsonPath("page.totalPages").value(1))
   }
 
 }
