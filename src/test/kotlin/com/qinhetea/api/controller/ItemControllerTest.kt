@@ -1,9 +1,7 @@
 package com.qinhetea.api.controller
 
 import com.qinhetea.api.entity.Item
-import com.qinhetea.api.repository.ItemRepository
-import org.junit.After
-import org.junit.Assert.assertEquals
+import com.qinhetea.api.repository.RepositoriesInitializer
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -25,27 +23,15 @@ class ItemControllerTest {
   private lateinit var mvc: MockMvc
 
   @Autowired
-  private lateinit var itemRepository: ItemRepository
+  private lateinit var initializer: RepositoriesInitializer
 
-  private lateinit var items: List<Item>
+  private val items: List<Item> get() = initializer.items
 
   private val path = "/api/items"
 
   @Before
   fun initialize() {
-    assertEquals(itemRepository.count(), 0)
-
-    items = itemRepository.saveAll(listOf(
-      Item(name = "item-1"),
-      Item(name = "item-2")
-    ))
-
-    assertEquals(itemRepository.count(), items.size.toLong())
-  }
-
-  @After
-  fun cleanup() {
-    itemRepository.deleteInBatch(items)
+    initializer.initialize()
   }
 
   @Test
@@ -80,7 +66,7 @@ class ItemControllerTest {
   fun findOneById() {
     mvc.perform(get("$path/${items.first().id}")).
       andExpect(status().isOk).
-      andExpect(jsonPath("name").value(items.first().name))
+      andExpect(jsonPath("name").value(items.first().name!!))
   }
 
   @Test

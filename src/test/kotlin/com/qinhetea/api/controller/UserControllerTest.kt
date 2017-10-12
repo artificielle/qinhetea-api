@@ -1,8 +1,7 @@
 package com.qinhetea.api.controller
 
 import com.qinhetea.api.entity.User
-import com.qinhetea.api.repository.UserRepository
-import org.junit.Assert.assertEquals
+import com.qinhetea.api.repository.RepositoriesInitializer
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -25,13 +24,15 @@ class UserControllerTest {
   private lateinit var mvc: MockMvc
 
   @Autowired
-  private lateinit var userRepository: UserRepository
+  private lateinit var initializer: RepositoriesInitializer
+
+  private val users: List<User> get() = initializer.users
 
   private val path = "/api/users"
 
   @Before
   fun initialize() {
-    assertEquals(userRepository.count(), 3)
+    initializer.initialize()
   }
 
   @Test
@@ -42,7 +43,7 @@ class UserControllerTest {
       andExpect(jsonPath("_embedded.users").isArray).
       andExpect(jsonPath("page.number").value(0)).
       andExpect(jsonPath("page.size").value(20)).
-      andExpect(jsonPath("page.totalElements").value(3)).
+      andExpect(jsonPath("page.totalElements").value(users.size)).
       andExpect(jsonPath("page.totalPages").value(1))
   }
 
