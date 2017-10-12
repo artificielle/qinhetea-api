@@ -11,5 +11,5 @@ data class Shop(
   val description: String? = null,
   val telephone: String? = null,
   @Id @GeneratedValue
-  val id: Long? = null
+  val id: Long = 0
 )

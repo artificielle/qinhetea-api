@@ -6,7 +6,7 @@ import javax.persistence.Id
 
 @Entity
 data class ItemTag(
-  val content: String = "",
+  val content: String? = null,
   @Id @GeneratedValue
   val id: Long = 0
 )

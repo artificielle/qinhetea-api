@@ -3,10 +3,7 @@ package com.qinhetea.api.entity
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
 import org.springframework.security.core.userdetails.User as UserDetailsUser
 
 typealias UserRole = String
@@ -14,13 +11,14 @@ typealias UserRole = String
 @Entity
 @Table(name = "sys_user")
 data class User(
+  @Column(unique = true)
   val username: String? = null,
   val nickname: String? = null,
   @JsonIgnore
   val password: String? = null,
   val roles: Array<UserRole> = arrayOf(Role.USER),
   @Id @GeneratedValue
-  val id: Long? = null
+  val id: Long = 0
 ) {
 
   fun toUserDetails() = UserDetailsUser(
@@ -38,7 +36,7 @@ data class User(
     else -> false
   }
 
-  override fun hashCode() = id?.toInt() ?: 0
+  override fun hashCode() = id.toInt()
 
   object Role {
     const val USER = "USER"

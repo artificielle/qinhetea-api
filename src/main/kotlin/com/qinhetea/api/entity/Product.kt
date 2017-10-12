@@ -14,5 +14,5 @@ data class Product(
   @ManyToOne
   val shop: Shop? = null,
   @Id @GeneratedValue
-  val id: Long? = null
+  val id: Long = 0
 )

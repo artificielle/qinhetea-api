@@ -8,5 +8,5 @@ import javax.persistence.Id
 data class Category(
   val name: String? = null,
   @Id @GeneratedValue
-  val id: Long? = null
+  val id: Long = 0
 )

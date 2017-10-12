@@ -4,9 +4,9 @@ import javax.persistence.*
 
 @Entity
 data class Item(
-  val name: String = "",
+  val name: String? = null,
   @OneToMany(fetch = FetchType.EAGER)
-  val tags: MutableList<ItemTag> = mutableListOf(),
+  val tags: MutableList<ItemTag>? = null,
   @Id @GeneratedValue
   val id: Long = 0
 )

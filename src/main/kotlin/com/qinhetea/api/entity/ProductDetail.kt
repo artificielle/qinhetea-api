@@ -15,7 +15,7 @@ data class ProductDetail(
   val saleDate: String? = null,
   val store: String? = null,
   val content: String? = null,
-  val contentType: String = "text/plain",
+  val contentType: String? = "text/plain",
   @Id @GeneratedValue
-  val id: Long? = null
+  val id: Long = 0
 )
