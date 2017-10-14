@@ -1,4 +1,4 @@
-package com.qinhetea.api.controller
+package com.qinhetea.api.web
 
 import com.qinhetea.api.entity.User
 import com.qinhetea.api.repository.RepositoriesInitializer
@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @RunWith(SpringRunner::class)
 @SpringBootTest
 @AutoConfigureMockMvc
-class UserControllerTest {
+class UserApiTest {
 
   @Autowired
   private lateinit var mvc: MockMvc
