@@ -8,23 +8,17 @@
 ./gradlew tasks
 
 # run as spring boot application
-./gradlew bootRun
+SPRING_PROFILES_ACTIVE=development ./gradlew bootRun
 
 # run all checks
 ./gradlew check
 
 # package and run
 ./gradlew build
-java -jar build/libs/*.jar
+java -jar build/libs/*.jar --spring.profiles.active=production
 ```
 
 ## references
-
-### weixin
-
-- <https://mp.weixin.qq.com/wiki>
-- <https://github.com/wechat-group/weixin-java-tools/wiki>
-- <https://github.com/wechat-group/weixin-java-mp-demo-springboot>
 
 ### spring boot
 
@@ -42,6 +36,12 @@ java -jar build/libs/*.jar
 - <https://kotlinlang.org/docs/reference/null-safety.html>
 - <https://kotlinlang.org/docs/reference/using-gradle.html>
 - <https://kotlinlang.org/api/latest/jvm/stdlib/index.html>
+
+### weixin
+
+- <https://mp.weixin.qq.com/wiki>
+- <https://github.com/wechat-group/weixin-java-tools/wiki>
+- <https://github.com/wechat-group/weixin-java-mp-demo-springboot>
 
 [build-badge]: https://img.shields.io/travis/airt/qinhetea-api.svg
 [build-status]: https://travis-ci.org/airt/qinhetea-api
