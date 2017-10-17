@@ -4,7 +4,9 @@ import com.qinhetea.api.entity.*
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.CrudRepository
+import org.springframework.data.repository.PagingAndSortingRepository
 import org.springframework.stereotype.Service
 
 @Service
@@ -37,8 +39,6 @@ class RepositoriesInitializer {
   lateinit var products: List<Product>
 
   lateinit var items: List<Item>
-
-  private val pagination = PageRequest.of(0, 10)
 
   private val lock = Any()
 
@@ -85,9 +85,7 @@ class RepositoriesInitializer {
       )
     ).map { it.encodePassword() })
 
-    logger.debug {
-      "initialized users = ${userRepository.findAll(pagination)}"
-    }
+    logger.debug { showRepository("users", userRepository) }
 
     return users
   }
@@ -99,9 +97,7 @@ class RepositoriesInitializer {
       Category(name = "category-1")
     ))
 
-    logger.debug {
-      "initialized categories = ${categoryRepository.findAll(pagination)}"
-    }
+    logger.debug { showRepository("categories", categoryRepository) }
 
     return categories
   }
@@ -113,9 +109,7 @@ class RepositoriesInitializer {
       Shop(name = "shop-1")
     ))
 
-    logger.debug {
-      "initialized shops = ${shopRepository.findAll(pagination)}"
-    }
+    logger.debug { showRepository("shops", shopRepository) }
 
     return shops
   }
@@ -141,9 +135,7 @@ class RepositoriesInitializer {
       )
     ))
 
-    logger.debug {
-      "initialized products = ${productRepository.findAll(pagination)}"
-    }
+    logger.debug { showRepository("products", productRepository) }
 
     return products
   }
@@ -156,11 +148,22 @@ class RepositoriesInitializer {
       Item(name = "item-2")
     ))
 
-    logger.debug {
-      "initialized items = ${itemRepository.findAll(pagination)}"
-    }
+    logger.debug { showRepository("items", itemRepository) }
 
     return items
+  }
+
+  private fun <A> showRepository(
+    name: String,
+    repository: PagingAndSortingRepository<A, Long>,
+    pagination: Pageable = PageRequest.of(0, 20)
+  ) = repository.findAll(pagination).let {
+    it.joinToString(
+      prefix = "initialized $name (${it.totalElements}) = [\n",
+      separator = "\n",
+      postfix = "\n]",
+      transform = { "  $it" }
+    )
   }
 
   private fun assertEmpty(repository: CrudRepository<*, *>) {
