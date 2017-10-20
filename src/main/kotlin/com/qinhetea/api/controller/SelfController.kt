@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.security.Principal
 
 @RestController
-@RequestMapping("/api/self")
+@RequestMapping("\${spring.data.rest.base-path}/self")
 class SelfController(val userRepository: UserRepository) {
 
   @GetMapping("")
