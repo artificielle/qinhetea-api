@@ -1,11 +1,13 @@
 package com.qinhetea.api.configuration
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.qinhetea.api.entity.User
 import com.qinhetea.api.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
+import org.springframework.http.MediaType
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -26,7 +28,14 @@ class SecurityConfiguration : WebSecurityConfigurerAdapter() {
       mvcMatchers(HttpMethod.GET, "/api/**").permitAll().
       mvcMatchers("/api/**").authenticated().
       anyRequest().permitAll().and().
-      formLogin().and().
+      formLogin().
+      successHandler { request, response, authentication ->
+        val user = userRepository.findByUsername(authentication.name).get()
+        response.characterEncoding = "UTF-8"
+        response.writer.write(jacksonObjectMapper().writeValueAsString(user))
+        response.setHeader("Content-Type", "application/json")
+        response.status = 200
+      }.and().
       csrf().disable().
       httpBasic()
   }
