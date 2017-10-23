@@ -14,7 +14,7 @@ class SelfController(val userRepository: UserRepository) {
 
   @GetMapping("")
   fun get(principal: Principal?) = when (principal) {
-    null -> ResponseEntity.status(HttpStatus.FORBIDDEN).build<Unit>()
+    null -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build<Unit>()
     else -> ResponseEntity.ok(userRepository.findByUsername(principal.name))
   }
 
