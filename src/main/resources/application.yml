@@ -14,4 +14,4 @@ spring:
 
 logging:
   level:
-    com.qinhetea.api: debug
+    com.qinhetea.api: trace
