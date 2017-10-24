@@ -9,13 +9,13 @@ import org.springframework.security.core.userdetails.User as UserDetailsUser
 typealias UserRole = String
 
 @Entity
-@Table(name = "sys_user")
+@Table(name = "application_user")
 data class User(
-  @Column(unique = true)
-  val username: String? = null,
   val nickname: String? = null,
+  @Column(unique = true)
+  val username: String,
   @JsonIgnore
-  val password: String? = null,
+  val password: String,
   val roles: Array<UserRole> = arrayOf(Role.USER),
   @Id @GeneratedValue
   val id: Long = 0
@@ -29,7 +29,7 @@ data class User(
 
   fun encodePassword() = copy(password = encoder.encode(password))
 
-  fun erasePassword() = copy(password = null)
+  fun erasePassword() = copy(password = "")
 
   override fun equals(other: Any?): Boolean = when (other) {
     is User -> id == other.id
