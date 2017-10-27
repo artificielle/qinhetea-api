@@ -1,6 +1,6 @@
 package com.qinhetea.api.entity
 
-import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import javax.persistence.*
@@ -14,7 +14,7 @@ data class User(
   val nickname: String? = null,
   @Column(unique = true)
   val username: String,
-  @JsonIgnore
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   val password: String,
   val roles: Array<UserRole> = arrayOf(Role.USER),
   @Id @GeneratedValue

@@ -1,7 +1,6 @@
 package com.qinhetea.api.controller
 
 import com.qinhetea.api.entity.User
-import com.qinhetea.api.entity.UserRole
 import com.qinhetea.api.repository.UserRepository
 import mu.KotlinLogging
 import org.springframework.data.rest.webmvc.RepositoryRestController
@@ -19,8 +18,8 @@ class UserController(override val repository: UserRepository)
 
   @PostMapping("")
   @Secured("ROLE_${User.Role.ADMIN}")
-  fun create(@RequestBody userForm: UserForm) =
-    if (repository.findByUsername(userForm.username).isPresent)
+  fun create(@RequestBody user: User) =
+    if (repository.findByUsername(user.username).isPresent)
       ResponseEntity.status(HttpStatus.CONFLICT).body(mapOf(
         "timestamp" to System.currentTimeMillis(),
         "status" to HttpStatus.CONFLICT.value(),
@@ -29,23 +28,8 @@ class UserController(override val repository: UserRepository)
       ))
     else
       ResponseEntity.ok(
-        repository.save(userForm.collect().encodePassword())
+        repository.save(user.encodePassword())
       )
-
-  @Suppress("ArrayInDataClass", "MemberVisibilityCanPrivate")
-  data class UserForm(
-    val nickname: String?,
-    val username: String,
-    val password: String,
-    val roles: Array<UserRole>
-  ) {
-    fun collect() = User(
-      nickname = nickname,
-      username = username,
-      password = password,
-      roles = roles
-    )
-  }
 
 }
 
