@@ -7,13 +7,16 @@
 ```bash
 ./gradlew tasks
 
-# run as spring boot application
-SPRING_PROFILES_ACTIVE=development ./gradlew bootRun
-
 # run all checks
 ./gradlew check
 
-# package and run
+# run as spring boot application
+SPRING_PROFILES_ACTIVE=development ./gradlew bootRun
+
+# open hal browser
+open http://localhost:9000/api
+
+# build and run
 ./gradlew build
 java -jar build/libs/*.jar --spring.profiles.active=production
 ```
