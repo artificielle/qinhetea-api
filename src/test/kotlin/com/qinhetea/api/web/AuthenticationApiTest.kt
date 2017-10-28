@@ -1,28 +1,26 @@
 package com.qinhetea.api.web
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.qinhetea.api.repository.RepositoriesInitializer
+import org.junit.Assert.assertEquals
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.context.junit4.SpringRunner
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@Ignore
 @RunWith(SpringRunner::class)
-@SpringBootTest
-@AutoConfigureMockMvc
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AuthenticationApiTest {
 
   @Autowired
-  private lateinit var mvc: MockMvc
+  private lateinit var template: TestRestTemplate
 
   @Autowired
   private lateinit var initializer: RepositoriesInitializer
@@ -36,30 +34,25 @@ class AuthenticationApiTest {
 
   @Test
   fun login() {
-    val request = login(username = "user", password = "pass")
-    mvc.perform(request).
-      andExpect(status().isOk).
-      andExpect(jsonPath("username").value("user"))
+    val response = login(username = "user", password = "pass")
+    assertEquals(HttpStatus.OK, response.statusCode)
+    assertEquals("user", response.body!!.path("username").asText())
   }
 
   @Test
   fun loginWithIncorrectPassword() {
-    val request = login(username = "user", password = "incorrect")
-    mvc.perform(request).
-      andExpect(status().isUnauthorized).
-      andExpect(jsonPath("status").isArray).
-      andExpect(jsonPath("error").value("Unauthorized")).
-      andExpect(jsonPath("message").value("Bad credentials"))
+    val response = login(username = "user", password = "incorrect")
+    assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
+    assertEquals("Unauthorized", response.body!!.path("error").asText())
+    assertEquals("Bad credentials", response.body!!.path("message").asText())
   }
 
   @Test
   fun loginWithNonexistentUsername() {
-    val request = login(username = "nonexistent", password = "pass")
-    mvc.perform(request).
-      andExpect(status().isUnauthorized).
-      andExpect(jsonPath("status").isArray).
-      andExpect(jsonPath("error").value("Unauthorized")).
-      andExpect(jsonPath("message").value("Bad credentials"))
+    val response = login(username = "nonexistent", password = "pass")
+    assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
+    assertEquals("Unauthorized", response.body!!.path("error").asText())
+    assertEquals("Bad credentials", response.body!!.path("message").asText())
   }
 
   @Test
@@ -68,11 +61,16 @@ class AuthenticationApiTest {
   }
 
   private fun login(username: String, password: String) =
-    post("$path/login").
-      contentType(MediaType.APPLICATION_FORM_URLENCODED).
-      content(
+    template.postForEntity(
+      "$path/login",
+      HttpEntity(
         listOf("username" to username, "password" to password).
-          joinToString("&") { (key, value) -> "$key=$value" }
-      )
+          joinToString("&") { (key, value) -> "$key=$value" },
+        HttpHeaders().also {
+          it.contentType = MediaType.APPLICATION_FORM_URLENCODED
+        }
+      ),
+      JsonNode::class.java
+    )
 
 }
