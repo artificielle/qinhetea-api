@@ -8,7 +8,7 @@ import javax.persistence.Entity
 import javax.persistence.EntityManagerFactory
 
 @Configuration
-class ExposeIdsRepositoryRestConfiguration : RepositoryRestConfigurerAdapter() {
+class RepositoryRestConfiguration : RepositoryRestConfigurerAdapter() {
 
   override fun configureRepositoryRestConfiguration(config: RepositoryRestConfiguration) {
     config.exposeIdsFor(*allManagedEntityClasses())
