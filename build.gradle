@@ -59,7 +59,7 @@ dependencies {
   compile 'org.springframework.boot:spring-boot-starter-data-rest'
   compile 'org.springframework.data:spring-data-rest-hal-browser'
   compile 'com.fasterxml.jackson.module:jackson-module-kotlin'
-  compile 'com.github.binarywang:weixin-java-mp:2.7.8'
+  compile 'com.github.binarywang:weixin-java-mp:2.8.0'
   compile 'io.github.microutils:kotlin-logging:1.4.6'
   compile 'com.h2database:h2'
   runtime 'org.postgresql:postgresql'

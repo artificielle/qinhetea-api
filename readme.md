@@ -31,6 +31,7 @@ java -jar build/libs/*.jar --spring.profiles.active=production
 - <https://spring.io/guides/tutorials/react-and-spring-data-rest/>
 - <https://docs.spring.io/spring-boot/docs/2.0.x/reference/html/>
 - <https://docs.spring.io/spring-security/site/docs/5.0.x/reference/html/>
+- <https://github.com/spring-projects/spring-boot/wiki/spring-boot-2.0-release-notes>
 
 ### kotlin
 
