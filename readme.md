@@ -4,6 +4,8 @@
 
 ## usage
 
+### development
+
 ```bash
 ./gradlew tasks
 
@@ -15,10 +17,13 @@ SPRING_PROFILES_ACTIVE=development ./gradlew bootRun
 
 # open hal browser
 open http://localhost:9000/api
+```
 
-# build and run
+### production
+
+```bash
 ./gradlew build
-java -jar build/libs/*.jar --spring.profiles.active=production
+docker-compose up -d
 ```
 
 ## references

@@ -1,0 +1,30 @@
+# https://docs.docker.com/compose/overview/
+version: '3'
+
+services:
+  api:
+    build: .
+    image: api
+    container_name: api
+    environment:
+      SPRING_PROFILES_ACTIVE: production
+    ports:
+      - 9000:9000
+      - 9010:9010
+    depends_on:
+      - database
+    networks:
+      - back-tier
+
+  database:
+    image: postgres:10-alpine
+    container_name: database
+    environment:
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - ~/qinhetea-data/postgresql/data:/var/lib/postgresql/data
+    networks:
+      - back-tier
+
+networks:
+  back-tier: {}

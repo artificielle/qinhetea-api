@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://database:5432/postgres
+    username: postgres
+    password: secret
+  jpa:
+    hibernate:
+      ddl-auto: update
+    # show-sql: true
+
+logging:
+  level:
+    com.qinhetea.api: info
+
+# spring.jpa.hibernate.ddl-auto
+#   none: do nothing
+#   validate: validate the schema, make no changes to the database
+#   update: update the schema
+#   create: create the schema, destroy previous data
+#   create-drop: drop the schema at the end of the session
